@@ -70,10 +70,10 @@ func run() {
 		panic(err)
 	}
 	cfg := pixelgl.WindowConfig{
-		Title:     "Kuleczka the game!",
-		Bounds:    pixel.R(0, 0, 400, 400),
-		VSync:     true,
-		Icon:      []pixel.Picture{icon},
+		Title:  "Kuleczka the game!",
+		Bounds: pixel.R(0, 0, 400, 400),
+		VSync:  true,
+		Icon:   []pixel.Picture{icon},
 	}
 	win, err := pixelgl.NewWindow(cfg)
 	if err != nil {
@@ -151,6 +151,7 @@ func run() {
 	if err != nil {
 		panic(err)
 	}
+	LastBallPos := pixel.ZV
 	player1hp, player2hp := 3, 3
 	Health := []float64{-140.0, -150.0, -160.0, 160.0, 150.0, 140.0, 180.0, -180.0}
 	HP := []pixel.Vec{pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV}
@@ -193,7 +194,7 @@ func run() {
 	for !win.Closed() {
 		prostokatg1 := pixel.R(PositionOfPlayer1.X-50, PositionOfPlayer1.Y-10, PositionOfPlayer1.X+50, PositionOfPlayer1.Y+15)
 		prostokatg2 := pixel.R(PositionOfPlayer2.X-50, PositionOfPlayer2.Y-10, PositionOfPlayer2.X+50, PositionOfPlayer2.Y+5)
-		circle := pixel.C(BallPos, 3)
+		circle := pixel.C(BallPos, 4)
 		dt := time.Since(last).Seconds()
 		last = time.Now()
 		if GameFreeze == false {
@@ -233,12 +234,7 @@ func run() {
 			}
 			a := 0
 			for range Lines {
-				if circle.IntersectLine(Lines[a]) != pixel.ZV {
-					// if BallPos.X < Slice[a].X {
-					// 	Xm = false
-					// } else {
-					// 	Xm = true
-					// }
+				if circle.IntersectLine(Lines[a]) != pixel.ZV || (*colision).IsColision(AvgCol, LastBallPos, BallPos, Lines[a]) == true {
 					Xm = (*colision).GoesXMinus(AvgCol, BallPos, Lines[a])
 					if repeat == 0 {
 						if reflection == "obstacle" && BallPos.Y < Slice[a].Y {
@@ -248,7 +244,8 @@ func run() {
 						}
 						repeat++
 					}
-					average = (*colision).Average(AvgCol, Xm, BallPos, Slice[a], Yminus)
+					average = average * -1
+					// average = (*colision).Average(AvgCol, Xm, BallPos, Slice[a], Yminus)
 					if reflection != "obstacle" {
 						reflection = "obstacle"
 					} else {
@@ -267,10 +264,13 @@ func run() {
 
 			if BallPos.X < -180 {
 				reflection = "sciana1"
+				average *= -1
 			}
 			if BallPos.X > 180 {
 				reflection = "sciana2"
+				average *= -1
 			}
+			LastBallPos = BallPos
 			switch reflection {
 			case "player1":
 				BallPos.Y -= 1 + Speed
@@ -282,14 +282,12 @@ func run() {
 				} else {
 					BallPos.Y -= 1 + Speed
 				}
-				average = 2
 			case "sciana2":
 				if Yminus == false {
 					BallPos.Y += 1 + Speed
 				} else {
 					BallPos.Y -= 1 + Speed
 				}
-				average = -2
 			default:
 				if Yminus == false {
 					BallPos.Y -= 1 + Speed
@@ -537,3 +535,4 @@ func run() {
 func main() {
 	pixelgl.Run(run)
 }
+
