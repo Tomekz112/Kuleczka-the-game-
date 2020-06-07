@@ -25,11 +25,12 @@ func (m *check) IsSame2(ballpos, objectpos pixel.Vec) bool {
 }
 
 type colision struct {
-	Xminus    bool //X is below 0
-	BallPos   pixel.Vec
-	ObjectPos pixel.Vec
-	Yminus    bool //ball goes from down or up
-	Line      pixel.Line
+	Xminus      bool //X is below 0
+	BallPos     pixel.Vec
+	ObjectPos   pixel.Vec
+	Yminus      bool //ball goes from down or up
+	Line        pixel.Line
+	LastBallPos pixel.Vec
 }
 
 func (c *colision) Average(Xminus bool, BallPos pixel.Vec, ObjectPos pixel.Vec, Yminus bool) float64 {
@@ -47,7 +48,7 @@ func (c *colision) Average(Xminus bool, BallPos pixel.Vec, ObjectPos pixel.Vec, 
 			a.Y++
 			b.Y++
 		}
-		a.X, b.X = 155, -155
+		a.X, b.X = 200, -200
 		GameMap = pixel.L(a, b)
 		point, need = line.Intersect(GameMap)
 	}
@@ -74,6 +75,16 @@ func (c *colision) GoesXMinus(ObjectPos pixel.Vec, Line pixel.Line) bool {
 		i++
 	}
 	if end != false {
+		return true
+	} else {
+		return false
+	}
+}
+
+func (c *colision) IsColision(LastBallPos, BallPos pixel.Vec, Line pixel.Line) bool {
+	BallLine := pixel.L(LastBallPos, BallPos)
+	_, boolean := Line.Intersect(BallLine)
+	if boolean == true {
 		return true
 	} else {
 		return false
