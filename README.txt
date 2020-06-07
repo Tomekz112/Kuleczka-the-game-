@@ -4,7 +4,7 @@ Curent stable version release date: 07.06.2020
 ========================================================== 
 How to play? 
 1. Open windows_build.exe, if you are on windows 
-2. Open linux_build.run, if you are on arch linux 
+2. Open linux_build, if you are on arch linux (may work on others, but im not 100% sure [tested on Manjaro xfce]) 
 3. If you have other os, you have to build it by yourself 
 ========================================================== 
 Controls
