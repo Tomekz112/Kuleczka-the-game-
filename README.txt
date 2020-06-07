@@ -31,4 +31,6 @@ Next update I will add online game probably based on peer2peer
  Info
 This is my first game, I've started my adventure with go
 at March. I hope you will enjoy it! Have fun :)
+----------------------
+Sorry for a lot of "if's"
 ===========================================================
