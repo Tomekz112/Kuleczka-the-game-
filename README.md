@@ -20,24 +20,24 @@ ex. ```go build physics.go kuleczka.go``` - file named physics will appear
 Controls
 ===============
  Player 1:
- -------
-   d           - move left
-   a           - move right 
-   e           - use skill
+ -------<br />
+   d           - move left<br />
+   a           - move right <br />
+   e           - use skill<br />
  Player 2: 
- --------
-   arrow left  - move left
-   arrow right - move right 
-   m           - use skill 
+ --------<br />
+   arrow left  - move left<br />
+   arrow right - move right <br />
+   m           - use skill <br />
  Editor: 
- -------
-   left click  - start of the obstacle
-   right click - end of the obstacle
+ -------<br />
+   left click  - start of the obstacle<br />
+   right click - end of the obstacle<br />
  Others:
- -------
-   space       - resume game
-   b           - back to main menu
-   left click  - select things 
+ -------<br />
+   space       - resume game<br />
+   b           - back to main menu<br />
+   left click  - select things <br />
    
  Coming next
  ==========
