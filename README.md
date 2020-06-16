@@ -15,6 +15,7 @@ How to build?
 =============
 1. Open file how_to_build.mp4 for tutorial
 2. After you will build, file should appear named by first file u choosed to build
+<br />
 ex. ```go build physics.go kuleczka.go``` - file named physics will appear
 
 Controls
