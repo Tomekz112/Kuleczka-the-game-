@@ -21,16 +21,19 @@ Controls
 ===============
  Player 1:
  -------
+ <br />
    d           - move left<br />
    a           - move right <br />
    e           - use skill<br />
  Player 2: 
  --------
+ <br />
    arrow left  - move left<br />
    arrow right - move right <br />
    m           - use skill <br />
  Editor: 
  -------
+ <br />
    left click  - start of the obstacle<br />
    right click - end of the obstacle<br />
  Others:
