@@ -1,11 +1,48 @@
-# Kuleczka-the-game-
-Kuleczka is about 2 platforms bounce ball. You can play singleplayer, multiplayer and edit map! Have fun
+# Kuleczka
+Kuleczka is about 2 platforms bounce ball. You can play singleplayer, multiplayer and edit map!
+This is my first game, I've started my adventure with go at March. I hope you will enjoy it! Have fun :) 
 
-======
-test
+Started: 29.04.2020
+Curent stable version release date: 07.06.2020 
 
+How to play?
+=================
+1. Open windows_build.exe, if you are on windows 
+2. Open linux_build, if you are on arch linux (may work on others, but im not 100% sure [tested on Manjaro xfce]) 
+3. If you have other os, you have to build it by yourself
 
------
-test
+How to build?
+=============
+1. Open file how_to_build.mp4 for tutorial
+2. After you will build file should appear named by first file u choosed to build
+   ex. ```go build physics.go kuleczka.go``` - file named physics will appear
 
-# test
+Controls
+===============
+ Player 1:
+ -------
+   d           - move left
+   a           - move right 
+   e           - use skill
+ Player 2: 
+ --------
+   arrow left  - move left
+   arrow right - move right 
+   m           - use skill 
+ Editor: 
+ -------
+   left click  - start of the obstacle
+   right click - end of the obstacle
+ Others:
+ -------
+   space       - resume game
+   b           - back to main menu
+   left click  - select things 
+   
+ Coming next
+ ==========
+ Improve physics
+ Online mode probably based on peer2peer
+ 
+ PS: sorry for a lot of "if's"
+   
