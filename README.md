@@ -24,7 +24,7 @@ Controls
  <br />
    d           - move left<br />
    a           - move right <br />
-   e           - use skill<br />
+   e           - use skill
  Player 2: 
  --------
  <br />
