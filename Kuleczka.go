@@ -459,6 +459,7 @@ func run() {
 			win.Clear(colornames.Lightcoral)
 		}
 		if mode != "menu" && mode != "controls" {
+			imd.Draw(win)
 			Healthg1g2 := pixel.NewSprite(heart, heart.Bounds())
 			if player1hp > 2 {
 				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[0])))
@@ -523,9 +524,6 @@ func run() {
 			fmt.Println(vector)
 			Lines = append(Lines, Line)
 
-		}
-		if mode != "menu" {
-			imd.Draw(win)
 		}
 
 		win.Update()
