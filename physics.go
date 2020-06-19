@@ -10,14 +10,7 @@ type check struct {
 	ballpos   pixel.Vec
 }
 
-func (m *check) IsSame(mousepos, objectpos pixel.Vec) bool {
-	return mousepos.Y < objectpos.Y+37 &&
-		mousepos.Y > objectpos.Y-25 &&
-		mousepos.X > objectpos.X-128 &&
-		mousepos.X < objectpos.X+130
-}
-
-func (m *check) IsSame2(ballpos, objectpos pixel.Vec) bool {
+func (m *check) IsSame(ballpos, objectpos pixel.Vec) bool {
 	return ballpos.X > objectpos.X-28 &&
 		ballpos.X < objectpos.X+28 &&
 		ballpos.Y > objectpos.Y-28 &&
