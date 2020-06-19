@@ -374,7 +374,7 @@ func run() {
 			case 1:
 				Player1spdBoost++
 			case 2:
-				Speed += 5.0
+				Speed += 2.5
 			case 3:
 				reversemovp2 = true
 				ToStopRevMovP2 = 3
@@ -389,13 +389,13 @@ func run() {
 			case 1:
 				Player2spdBoost++
 			case 2:
-				Speed += 5.0
+				Speed += 2.5
 			case 3:
 				reversemovp1 = true
 				ToStopRevMovP1 = 3
 			default:
 			}
-			Player2BoostSlot--
+			Player2BoostSlot = -1
 		}
 		i := 0
 		for range modepos {
@@ -444,9 +444,9 @@ func run() {
 		if (*check).IsSame2(mopos, BallPos, boostPos) == true {
 			boostPos.X = 6969
 			boostPos.Y = 6969
-			if GameFreeze != true || reflection == "player1" {
+			if GameFreeze != true && reflection == "player1" {
 				Player1BoostSlot = BoostNumber
-			} else {
+			} else if GameFreeze != true && reflection =="player2" {
 				Player2BoostSlot = BoostNumber
 			}
 		}
@@ -459,7 +459,6 @@ func run() {
 			win.Clear(colornames.Lightcoral)
 		}
 		if mode != "menu" && mode != "controls" {
-			imd.Draw(win)
 			Healthg1g2 := pixel.NewSprite(heart, heart.Bounds())
 			if player1hp > 2 {
 				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[0])))
@@ -525,6 +524,9 @@ func run() {
 			Lines = append(Lines, Line)
 
 		}
+		if mode != "menu" {
+			imd.Draw(win)
+		}
 
 		win.Update()
 	}
@@ -533,4 +535,3 @@ func run() {
 func main() {
 	pixelgl.Run(run)
 }
-
