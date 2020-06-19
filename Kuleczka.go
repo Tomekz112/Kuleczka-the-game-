@@ -35,8 +35,9 @@ func loadPicture(path string) (pixel.Picture, error) {
 	return pixel.PictureDataFromImage(img), nil
 }
 
+var button (*buttonType)
 var mopos (*check)
-var AvgCol (*colision)
+var avgCol (*colision)
 var mode string = "menu"
 var stop bool = false
 
@@ -108,7 +109,6 @@ func run() {
 		panic(err)
 	}
 	PositionOfPlayer1.Y = 180
-	PositionOfPlayer1.X = 0
 
 	player2, err := loadPicture("img/platforma2.png")
 	if err != nil {
@@ -125,28 +125,11 @@ func run() {
 		}
 	}
 
-	modes, err := loadPicture("img/mode.png")
-	if err != nil {
-		panic(err)
-	}
-
 	control, err := loadPicture("img/controls.png")
 	if err != nil {
 		panic(err)
 	}
-	var modeFrames []pixel.Rect
-	for x := modes.Bounds().Min.X; x < modes.Bounds().Max.X; x += 260 {
-		for y := modes.Bounds().Min.Y; y < modes.Bounds().Max.Y; y += 100 {
-			modeFrames = append(modeFrames, pixel.R(x, y, x+260, y+100))
-		}
-	}
-	modesel, modesel2, modesel3, modesel4, modesel5, modesel6 := pixel.NewSprite(modes, modeFrames[0]), pixel.NewSprite(modes, modeFrames[1]), pixel.NewSprite(modes, modeFrames[2]), pixel.NewSprite(modes, modeFrames[3]), pixel.NewSprite(modes, modeFrames[4]), pixel.NewSprite(modes, modeFrames[5])
-	modepos := []pixel.Vec{pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV}
-	modepos[0].Y, modepos[1].Y, modepos[2].Y, modepos[3].Y, modepos[4].Y, modepos[5].Y = 30, -30, 175, 175, -175, -175
-	modepos[2].X, modepos[3].X, modepos[4].X, modepos[5].X = -100, 142, -85, 142
 
-	PosEditMode, Pos2pMode, Pos1pMode := pixel.ZV, pixel.ZV, pixel.ZV
-	PosEditMode.Y, PosEditMode.X, Pos2pMode.Y, Pos2pMode.X, Pos1pMode.Y, Pos1pMode.X = -150, 0, -75, 0, 0, 0
 	heart, err := loadPicture("img/serce.png")
 	if err != nil {
 		panic(err)
@@ -175,7 +158,6 @@ func run() {
 	Player1spdBoost, Player2spdBoost := 0.0, 0.0
 	reversemovp1, ToStopRevMovP1, reversemovp2, ToStopRevMovP2 := false, 0, false, 0
 	BegginingOfLineSet, EndOfLineSet := false, false
-	help := false
 	imd := imdraw.New(nil)
 	BegginingOfLine, EndOfLine := pixel.ZV, pixel.ZV
 	rand.Seed(time.Now().UnixNano())
@@ -186,11 +168,16 @@ func run() {
 		Silent:   false,
 	}
 	speaker.Play(volume1)
-	var size [5]float64
-	size[0], size[1], size[2], size[3], size[4] = 0.8, 0.8, 0.8, 0.8, 0.8
 	LastReflection := "player2"
-	fontsize := [7]float64{0.8, 0.8, 0.8, 0.7, 0.8, 0.7, 0.8}
+	// fontsize := [6]float64{3, 3, 3, 3, 3, 3}
 	repeat := 0
+	buttonNames := []string{"2 players", "1 player", "editor", "exit", "controls", "online"}
+	modepos := []pixel.Vec{pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV, pixel.ZV}
+	modepos[0].Y, modepos[1].Y, modepos[2].Y, modepos[3].Y, modepos[4].Y, modepos[5].Y = 220, 160, 365, 365, 15, 15
+	modepos[0].X, modepos[1].X, modepos[2].X, modepos[3].X, modepos[4].X, modepos[5].X = 100, 105, 0, 295, 0, 250
+	for i := 0; i != 6; i++ {
+		(*buttonType).createButton(button, modepos[i], buttonNames[i])
+	}
 	for !win.Closed() {
 		prostokatg1 := pixel.R(PositionOfPlayer1.X-50, PositionOfPlayer1.Y-10, PositionOfPlayer1.X+50, PositionOfPlayer1.Y+15)
 		prostokatg2 := pixel.R(PositionOfPlayer2.X-50, PositionOfPlayer2.Y-10, PositionOfPlayer2.X+50, PositionOfPlayer2.Y+5)
@@ -216,7 +203,7 @@ func run() {
 				} else {
 					Xm = true
 				}
-				average = (*colision).Average(AvgCol, Xm, BallPos, PositionOfPlayer1, true)
+				average = (*colision).Average(avgCol, Xm, BallPos, PositionOfPlayer1, true)
 				reflection = "player1"
 				Yminus = true
 			}
@@ -228,14 +215,14 @@ func run() {
 				} else {
 					average = 0
 				}
-				average = (*colision).Average(AvgCol, Xm, BallPos, PositionOfPlayer2, false)
+				average = (*colision).Average(avgCol, Xm, BallPos, PositionOfPlayer2, false)
 				reflection = "player2"
 				Yminus = false
 			}
 			a := 0
 			for range Lines {
-				if circle.IntersectLine(Lines[a]) != pixel.ZV || (*colision).IsColision(AvgCol, LastBallPos, BallPos, Lines[a]) == true {
-					Xm = (*colision).GoesXMinus(AvgCol, BallPos, Lines[a])
+				if circle.IntersectLine(Lines[a]) != pixel.ZV || (*colision).IsColision(avgCol, LastBallPos, BallPos, Lines[a]) == true {
+					Xm = (*colision).GoesXMinus(avgCol, BallPos, Lines[a])
 					if repeat == 0 {
 						if reflection == "obstacle" && BallPos.Y < Slice[a].Y {
 							Yminus = true
@@ -245,7 +232,6 @@ func run() {
 						repeat++
 					}
 					average = average * -1
-					// average = (*colision).Average(AvgCol, Xm, BallPos, Slice[a], Yminus)
 					if reflection != "obstacle" {
 						reflection = "obstacle"
 					} else {
@@ -265,8 +251,7 @@ func run() {
 			if BallPos.X < -180 {
 				reflection = "sciana1"
 				average *= -1
-			}
-			if BallPos.X > 180 {
+			} else if BallPos.X > 180 {
 				reflection = "sciana2"
 				average *= -1
 			}
@@ -397,56 +382,38 @@ func run() {
 			}
 			Player2BoostSlot = -1
 		}
-		i := 0
-		for range modepos {
-			if (*check).IsSame(mopos, mouse, modepos[i]) == true && fontsize[i] < 1 && mode == "menu" {
-				shot := buffer.Streamer(1, buffer.Len())
-				volume := &effects.Volume{
-					Streamer: shot,
-					Base:     2,
-					Volume:   -4,
-					Silent:   false,
-				}
-				speaker.Play(volume)
-				fontsize[i] *= 1.25
-			} else if (*check).IsSame(mopos, mouse, modepos[i]) == false {
-				fontsize[i] = 0.8
-			}
-			i++
-		}
-		if win.JustPressed(pixelgl.MouseButtonLeft) {
-			if mode == "menu" {
-				if (*check).IsSame(mopos, mouse, modepos[0]) == true {
-					mode = "singleplayer"
-					GameFreeze = true
-				} else if (*check).IsSame(mopos, mouse, modepos[1]) == true {
-					mode = "multiplayer"
-					GameFreeze = true
-				} else if (*check).IsSame(mopos, mouse, modepos[2]) == true {
-					mode = "edytor"
-					GameFreeze = true
-					help = true
-				} else if (*check).IsSame(mopos, mouse, modepos[3]) == true {
-					os.Exit(3)
-				} else if (*check).IsSame(mopos, mouse, modepos[5]) == true {
-					mode = "controls"
-				}
-			}
-		}
-		if mode == "edytor" && win.JustPressed(pixelgl.MouseButtonLeft) && help == false {
+		hover, selectMode := (*buttonType).interactButton(button, win.MousePosition(), 3.5)
+		if mode == "edytor" && win.JustPressed(pixelgl.MouseButtonLeft) {
 			BegginingOfLine = mouse
 			BegginingOfLineSet = true
-		} else if mode == "edytor" && win.JustPressed(pixelgl.MouseButtonRight) && help == false {
+		} else if mode == "edytor" && win.JustPressed(pixelgl.MouseButtonRight) {
 			EndOfLine = mouse
 			EndOfLineSet = true
 		}
-		help = false
-		if (*check).IsSame2(mopos, BallPos, boostPos) == true {
+		if win.JustPressed(pixelgl.MouseButtonLeft) && mode == "menu" && hover == true {
+			if mode == "menu" && hover == true {
+				switch selectMode {
+				case 1:
+					mode = "multiplayer"
+				case 2:
+					mode = "singleplayer"
+				case 3:
+					mode = "edytor"
+				case 4:
+					os.Exit(3)
+				case 5:
+					mode = "controls"
+				case 6:
+					fmt.Println("Coming soon! :)")
+				}
+				GameFreeze = true
+			}
+		}
+		if (*check).IsSame(mopos, BallPos, boostPos) == true {
 			boostPos.X = 6969
-			boostPos.Y = 6969
 			if GameFreeze != true && reflection == "player1" {
 				Player1BoostSlot = BoostNumber
-			} else if GameFreeze != true && reflection =="player2" {
+			} else if GameFreeze != true && reflection == "player2" {
 				Player2BoostSlot = BoostNumber
 			}
 		}
@@ -460,30 +427,24 @@ func run() {
 		}
 		if mode != "menu" && mode != "controls" {
 			Healthg1g2 := pixel.NewSprite(heart, heart.Bounds())
-			if player1hp > 2 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[0])))
+			in, in2 := 0, 3
+			for i := 2; i != -1; i-- {
+				if player1hp > i {
+					Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[in])))
+				} else if player1hp <= 0 {
+					fmt.Println("Player 1 lost")
+					os.Exit(3)
+				}
+				if player2hp > i {
+					Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[in2])))
+				} else if player2hp <= 0 {
+					fmt.Println("Player 2 lost")
+					os.Exit(3)
+				}
+				in++
+				in2++
 			}
-			if player1hp > 1 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[1])))
-			}
-			if player1hp > 0 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[2])))
-			} else {
-				fmt.Println("Player 1 lost")
-				os.Exit(3)
-			}
-			if player2hp > 2 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[3])))
-			}
-			if player2hp > 1 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[4])))
-			}
-			if player2hp > 0 {
-				Healthg1g2.Draw(win, pixel.IM.Scaled(pixel.ZV, 2).Moved(win.Bounds().Center().Add(HP[5])))
-			} else {
-				fmt.Println("Player 2 lost")
-				os.Exit(3)
-			}
+
 			if stop == false {
 				BoostNumber = rand.Intn(len(Frames))
 				boost = pixel.NewSprite(spritesheet, Frames[BoostNumber])
@@ -502,12 +463,16 @@ func run() {
 			controls := pixel.NewSprite(control, control.Bounds())
 			controls.Draw(win, pixel.IM.Scaled(pixel.ZV, 1).Moved(win.Bounds().Center()))
 		} else {
-			modesel.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[0]).Moved(win.Bounds().Center().Add(modepos[0])))
-			modesel2.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[1]).Moved(win.Bounds().Center().Add(modepos[1])))
-			modesel3.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[2]).Moved(win.Bounds().Center().Add(modepos[2])))
-			modesel4.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[3]).Moved(win.Bounds().Center().Add(modepos[3])))
-			modesel5.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[4]).Moved(win.Bounds().Center().Add(modepos[4])))
-			modesel6.Draw(win, pixel.IM.Scaled(pixel.ZV, fontsize[5]).Moved(win.Bounds().Center().Add(modepos[5])))
+			if hover == true {
+				(*buttonType).drawButton(button, win, selectMode-1, 4.5)
+				for i := 0; i != 6; i++ {
+					if i != selectMode-1 {
+						(*buttonType).drawButton(button, win, i, 3.5)
+					}
+				}
+			} else {
+				(*buttonType).drawButtons(button, win, 0, 5, 3.5)
+			}
 		}
 
 		if mode == "edytor" && BegginingOfLineSet == true && EndOfLineSet == true {
@@ -524,7 +489,7 @@ func run() {
 			Lines = append(Lines, Line)
 
 		}
-		if mode != "menu" {
+		if mode != "menu" && mode != "controls" {
 			imd.Draw(win)
 		}
 
